@@ -6,7 +6,7 @@
 NVCC      = nvcc
 # sm_80 = A100, sm_86 = RTX 3090, sm_89 = RTX 4090
 # Change this to match your GPU
-ARCH      = sm_80
+ARCH = sm_75
 CFLAGS    = -O3 -arch=$(ARCH) -lineinfo
 TARGET    = naive_gemm
 

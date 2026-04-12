@@ -1,5 +1,5 @@
 NVCC   = nvcc
-ARCH   = sm_80
+ARCH = sm_75
 CFLAGS = -O3 -arch=$(ARCH) -lineinfo -lm
 TARGET = benchmark
 
