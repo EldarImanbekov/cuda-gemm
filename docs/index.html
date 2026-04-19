@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eldar Imanbekov</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:    #0E0A07;
+    --bg2:   #141009;
+    --bg3:   #1C1510;
+    --bg4:   #251C14;
+    --amber: #D4935A;
+    --gold:  #C8873A;
+    --cream: #E8D5B7;
+    --rust:  #A0522D;
+    --sand:  #8B7355;
+    --white: #F5ECD7;
+    --gray:  #7A6A55;
+    --border: rgba(212,147,90,0.1);
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--white); font-family: var(--sans); line-height: 1.6; overflow-x: hidden; }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: linear-gradient(rgba(212,147,90,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(212,147,90,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none; z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.25rem 4rem;
+    background: rgba(14,10,7,0.9); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { font-family: var(--mono); font-size: 0.85rem; color: var(--amber); letter-spacing: 0.05em; }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a { font-family: var(--mono); font-size: 0.78rem; color: var(--gray); text-decoration: none; letter-spacing: 0.06em; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--amber); }
+
+  section { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; padding: 7rem 2rem; }
+
+  /* HERO */
+  #hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding-top: 8rem; }
+
+  .hero-tag { font-family: var(--mono); font-size: 0.75rem; color: var(--amber); letter-spacing: 0.15em; margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.6s ease forwards 0.2s; }
+
+  .hero-name { font-size: clamp(3.2rem, 8vw, 6.5rem); font-weight: 800; line-height: 1.0; letter-spacing: -0.03em; color: var(--white); margin-bottom: 0.5rem; opacity: 0; animation: fadeUp 0.6s ease forwards 0.4s; }
+  .hero-name span { color: var(--amber); }
+
+  .hero-title { font-size: clamp(1rem, 2vw, 1.3rem); font-weight: 400; color: var(--sand); margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.6s ease forwards 0.6s; }
+
+  .hero-about {
+    max-width: 620px;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.8s;
+  }
+
+  .hero-about p {
+    font-size: 1rem;
+    color: var(--cream);
+    line-height: 1.85;
+    margin-bottom: 1rem;
+    font-weight: 400;
+  }
+
+  .hero-about p:last-child { margin-bottom: 0; }
+  .hero-about .hl { color: var(--amber); }
+
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.6s ease forwards 1.0s; }
+
+  .btn { font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.08em; padding: 0.75rem 1.8rem; border-radius: 4px; text-decoration: none; transition: all 0.2s; cursor: pointer; border: none; }
+  .btn-primary { background: var(--amber); color: var(--bg); font-weight: 700; }
+  .btn-primary:hover { background: var(--gold); transform: translateY(-2px); }
+  .btn-ghost { background: transparent; color: var(--amber); border: 1px solid rgba(212,147,90,0.3); }
+  .btn-ghost:hover { border-color: var(--amber); background: rgba(212,147,90,0.06); transform: translateY(-2px); }
+
+  /* SECTION HEADERS */
+  .section-tag { font-family: var(--mono); font-size: 0.72rem; color: var(--amber); letter-spacing: 0.2em; margin-bottom: 0.75rem; }
+  .section-title { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; color: var(--white); margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .section-sub { font-size: 1rem; color: var(--cream); line-height: 1.8; max-width: 580px; margin-bottom: 3.5rem; }
+
+  /* ABOUT */
+  #about .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .about-text p {
+    font-size: 0.95rem;
+    color: var(--cream);
+    line-height: 1.85;
+    margin-bottom: 1.2rem;
+  }
+
+  .about-text p:last-child { margin-bottom: 0; }
+
+  .about-facts {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .fact-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--amber);
+    border-radius: 4px;
+    padding: 1.1rem 1.3rem;
+  }
+
+  .fact-label { font-family: var(--mono); font-size: 0.68rem; color: var(--amber); letter-spacing: 0.12em; margin-bottom: 0.3rem; }
+  .fact-val { font-size: 0.92rem; color: var(--cream); line-height: 1.5; }
+
+  /* EXPERIENCE */
+  .exp-list { display: flex; flex-direction: column; gap: 1.5rem; }
+
+  .exp-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.75rem 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .exp-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--card-accent, var(--amber)); }
+  .exp-card:hover { border-color: rgba(212,147,90,0.25); transform: translateX(4px); }
+
+  .exp-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem; }
+  .exp-org { font-size: 1.05rem; font-weight: 700; color: var(--white); }
+  .exp-date { font-family: var(--mono); font-size: 0.72rem; color: var(--gray); background: var(--bg4); padding: 0.25rem 0.75rem; border-radius: 100px; }
+  .exp-role { font-family: var(--mono); font-size: 0.78rem; margin-bottom: 1rem; color: var(--card-accent, var(--amber)); }
+
+  .exp-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+  .exp-bullets li { font-family: var(--mono); font-size: 0.8rem; color: var(--gray); padding-left: 1.2rem; position: relative; line-height: 1.6; }
+  .exp-bullets li::before { content: '›'; position: absolute; left: 0; color: var(--amber); }
+
+  /* PROJECTS */
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+
+  .project-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.75rem;
+    transition: all 0.25s;
+    display: flex;
+    flex-direction: column;
+  }
+  .project-card:hover { border-color: rgba(212,147,90,0.3); transform: translateY(-4px); background: var(--bg4); }
+  .project-card.featured { grid-column: 1 / -1; }
+
+  .project-tag { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.15em; padding: 0.2rem 0.6rem; border-radius: 3px; display: inline-block; margin-bottom: 1rem; }
+  .tag-cuda { background: rgba(212,147,90,0.12); color: var(--amber); }
+  .tag-ml   { background: rgba(160,82,45,0.15);  color: #C47A50; }
+  .tag-cv   { background: rgba(200,135,58,0.12); color: var(--gold); }
+  .tag-data { background: rgba(139,115,85,0.15); color: var(--cream); }
+
+  .project-title { font-size: 1.1rem; font-weight: 700; color: var(--white); margin-bottom: 0.6rem; }
+  .project-desc { font-size: 0.9rem; color: var(--cream); line-height: 1.75; margin-bottom: 1.25rem; flex: 1; }
+
+  .project-links { display: flex; gap: 0.75rem; margin-top: auto; flex-wrap: wrap; }
+  .project-link { font-family: var(--mono); font-size: 0.72rem; color: var(--gray); text-decoration: none; border: 1px solid var(--border); padding: 0.3rem 0.75rem; border-radius: 3px; transition: all 0.2s; }
+  .project-link:hover { color: var(--amber); border-color: var(--amber); }
+
+  /* SKILLS */
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+  .skill-group { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; }
+  .skill-group-title { font-family: var(--mono); font-size: 0.72rem; color: var(--amber); letter-spacing: 0.15em; margin-bottom: 1rem; }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .skill-tag { font-family: var(--mono); font-size: 0.72rem; color: var(--gray); background: var(--bg4); border: 1px solid var(--border); padding: 0.25rem 0.65rem; border-radius: 3px; transition: all 0.2s; }
+  .skill-tag:hover { color: var(--amber); border-color: rgba(212,147,90,0.3); }
+
+  /* CONTACT */
+  #contact { text-align: center; }
+  #contact .section-sub { max-width: 450px; margin: 0 auto 2.5rem; }
+  .contact-links { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+
+  footer { text-align: center; padding: 2rem; font-family: var(--mono); font-size: 0.72rem; color: var(--gray); border-top: 1px solid var(--border); position: relative; z-index: 1; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--amber); }
+
+  @media (max-width: 700px) {
+    nav { padding: 1rem 1.5rem; }
+    #about .about-grid { grid-template-columns: 1fr; }
+    .hero-stats { gap: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">eldar.dev</div>
+  <ul class="nav-links">
+    <li><a href="#about">about</a></li>
+    <li><a href="#experience">experience</a></li>
+    <li><a href="#projects">projects</a></li>
+    <li><a href="#contact">contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-tag">// based in Chicago, IL</div>
+  <h1 class="hero-name">Eldar<br><span>Imanbekov</span></h1>
+  <p class="hero-title">CS Student · GPU & ML Systems · HPC Researcher</p>
+
+  <div class="hero-about">
+    <p>
+      I'm a computer science student at NLU with a deep interest in what happens <span class="hl">underneath</span> the tools everyone else uses.
+      While most people work with AI from the top down, I've been going the other direction —
+      learning how GPU hardware actually works, writing code that talks directly to the chip,
+      and figuring out why things are slow and how to make them faster.
+    </p>
+
+  </div>
+
+  <div class="hero-btns">
+    <a href="https://docs.google.com/document/d/1yVKUo0QpNQljBZ7RxtHvomQZT1GzhC-zglxsSOhcSWk/edit?tab=t.0" class="btn btn-primary" target="_blank">Resume</a>
+    <a href="https://www.linkedin.com/in/eldar-imanbekov-aa5ba8265" class="btn btn-ghost" target="_blank">LinkedIn</a>
+    <a href="mailto:imanbekoveldar2@gmail.com" class="btn btn-ghost">Email Me</a>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="reveal">
+    <div class="section-tag">// ABOUT ME</div>
+    <h2 class="section-title">What Drives Me</h2>
+  </div>
+
+  <div class="about-grid reveal">
+    <div class="about-text">
+      <p>
+        There's something that genuinely excites me about working at the boundary between software and hardware.
+        Most of the world uses AI as a black box — you type something in and something comes out.
+        I want to understand the machinery that makes that possible, and more importantly,
+        how to make that machinery run better.
+      </p>
+      <p>
+        Right now I'm focused on GPU programming and high-performance computing.
+        I've been learning how memory works at the hardware level, why access patterns matter,
+        and how to write code that actually takes advantage of what modern GPUs can do.
+        It's a field where the gap between what hardware is capable of and what software actually uses
+        is enormous — and closing that gap is the work I want to do.
+      </p>
+      <p>
+        Outside of the technical side, I think a lot about how to communicate hard ideas simply.
+        The best engineers I've learned from can explain a complex system to anyone.
+        That's a skill I work on deliberately.
+      </p>
+    </div>
+
+    <div class="about-facts">
+      <div class="fact-card">
+        <div class="fact-label">CURRENTLY</div>
+        <div class="fact-val">HPC Research at NLU — building and optimizing GPU kernels, exploring what makes AI systems fast at the hardware level.</div>
+      </div>
+      <div class="fact-card">
+        <div class="fact-label">INTERESTED IN</div>
+        <div class="fact-val">Kernel engineering, GPU architecture, ML inference optimization, compiler systems, HPC research.</div>
+      </div>
+      <div class="fact-card">
+        <div class="fact-label">BACKGROUND</div>
+        <div class="fact-val">From Bishkek, Kyrgyzstan. F1 visa student at NLU, Chicago. Junior, graduating June 2027.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="reveal">
+    <div class="section-tag">// EXPERIENCE</div>
+    <h2 class="section-title">Where I've Worked</h2>
+    <p class="section-sub">Three internships across ML engineering, systems performance, and satellite data — each one pushing me deeper into the stack.</p>
+  </div>
+
+  <div class="exp-list">
+    <div class="exp-card reveal" style="--card-accent:#D4935A;">
+      <div class="exp-header">
+        <div class="exp-org">NLU — HPC Research</div>
+        <div class="exp-date">Jan 2026 – Present</div>
+      </div>
+      <div class="exp-role">HPC Research Intern · Wheeling, IL</div>
+      <ul class="exp-bullets">
+        <li>Developed CUDA kernels and optimized memory access patterns, reducing execution time by 38–57%.</li>
+        <li>Benchmarked GPU vs CPU implementations, achieving 3× speedup on compute-intensive operations.</li>
+        <li>Identified memory bandwidth inefficiencies using Nsight profiling, improving overall GPU utilization.</li>
+        <li>Reduced latency in hybrid CPU–GPU pipelines through optimization of data transfer and kernel execution.</li>
+      </ul>
+    </div>
+
+    <div class="exp-card reveal" style="--card-accent:#A0522D;">
+      <div class="exp-header">
+        <div class="exp-org">CCC Intelligent Solutions</div>
+        <div class="exp-date">Sep 2025 – Dec 2025</div>
+      </div>
+      <div class="exp-role" style="color:#C47A50;">ML Systems Intern · Chicago, IL</div>
+      <ul class="exp-bullets">
+        <li>Designed performance-critical ML experiments profiling GPU utilization, memory bandwidth, and latency.</li>
+        <li>Built reproducible Python pipelines analyzing 100K+ system-level metrics per experiment.</li>
+        <li>Identified and mitigated performance bottlenecks contributing to 10–20% efficiency gains.</li>
+        <li>Evaluated accuracy–performance tradeoffs across model configurations under compute constraints.</li>
+      </ul>
+    </div>
+
+    <div class="exp-card reveal" style="--card-accent:#8B7355;">
+      <div class="exp-header">
+        <div class="exp-org">NASA Open Science</div>
+        <div class="exp-date">Feb 2025 – Sep 2025</div>
+      </div>
+      <div class="exp-role" style="color:#8B7355;">ML Engineer Intern · Chicago, IL</div>
+      <ul class="exp-bullets">
+        <li>Developed ML models for AQI forecasting using ERA5 and Sentinel-5P satellite datasets, achieving R²=0.87 and MAE=4.1.</li>
+        <li>Built preprocessing and validation pipelines supporting repeatable experimentation at scale.</li>
+        <li>Worked with GB-scale satellite datasets with emphasis on data quality and reproducibility.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="reveal">
+    <div class="section-tag">// PROJECTS</div>
+    <h2 class="section-title">Things I've Built</h2>
+    <p class="section-sub">A mix of low-level systems work, machine learning, and computer vision — all built out of genuine curiosity.</p>
+  </div>
+
+  <div class="projects-grid">
+
+    <div class="project-card featured reveal">
+      <span class="project-tag tag-cuda">CUDA · HPC · Performance</span>
+      <h3 class="project-title">CUDA GEMM Optimization</h3>
+      <p class="project-desc">
+        I wanted to understand what actually happens when a GPU does math — not by reading about it, but by building it myself.
+        So I wrote three versions of matrix multiplication from scratch: a naive baseline that reads from slow global memory,
+        a tiled version that loads data into fast on-chip shared memory so threads can reuse it,
+        and a coalesced version that fixes memory access patterns at the cache line level.
+        Each one taught me something the previous one couldn't. Real benchmark numbers on a Tesla T4 GPU,
+        with correctness verified against CPU reference implementation.
+      </p>
+      <div class="project-links">
+        <a href="https://github.com/EldarImanbekov/cuda-gemm" class="project-link" target="_blank">View on GitHub →</a>
+        <span class="project-link">1.89× speedup · Tesla T4 · 3 kernels</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <span class="project-tag tag-cv">Computer Vision</span>
+      <h3 class="project-title">FightIQ</h3>
+      <p class="project-desc">
+        Built a real-time computer vision pipeline to analyze combat sports footage using pose estimation.
+        The interesting challenge here was making inference fast enough to actually be useful in a live context —
+        balancing latency and accuracy under real constraints. Integrated model outputs with generative models
+        to produce automated performance summaries.
+      </p>
+      <div class="project-links">
+        <span class="project-link">YOLO · OpenCV · PyTorch</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <span class="project-tag tag-ml">Machine Learning</span>
+      <h3 class="project-title">AI Real Estate Price Prediction</h3>
+      <p class="project-desc">
+        Designed ML models to automate analysis of 60K+ real estate records. The focus wasn't just accuracy —
+        it was making the outputs understandable and trustworthy enough that people would actually use them.
+        Built interactive dashboards that improved pricing recommendations by ~15%.
+      </p>
+      <div class="project-links">
+        <span class="project-link">Scikit-learn · Pandas · Python</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <span class="project-tag tag-data">Geospatial · Data</span>
+      <h3 class="project-title">Climate & Geospatial Analysis</h3>
+      <p class="project-desc">
+        Processed GB-scale ERA5 climate datasets across 30+ counties to identify historical thresholds
+        and anomalous patterns relevant to agriculture planning and risk analysis.
+        Optimized data aggregation and caching workflows, cutting redundant computation by ~40%.
+      </p>
+      <div class="project-links">
+        <span class="project-link">ERA5 · NumPy · GeoPandas</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="reveal">
+    <div class="section-tag">// SKILLS</div>
+    <h2 class="section-title">Technical Stack</h2>
+    <p class="section-sub">From hardware-level GPU programming up through ML systems and data pipelines.</p>
+  </div>
+  <div class="skills-grid reveal">
+    <div class="skill-group">
+      <div class="skill-group-title">GPU & PERFORMANCE</div>
+      <div class="skill-tags">
+        <span class="skill-tag">CUDA</span>
+        <span class="skill-tag">Nsight</span>
+        <span class="skill-tag">Memory Optimization</span>
+        <span class="skill-tag">Kernel Profiling</span>
+        <span class="skill-tag">Shared Memory</span>
+        <span class="skill-tag">Roofline Model</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">LANGUAGES</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">C++</span>
+        <span class="skill-tag">CUDA C</span>
+        <span class="skill-tag">SQL</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">ML / AI</div>
+      <div class="skill-tags">
+        <span class="skill-tag">PyTorch</span>
+        <span class="skill-tag">TensorFlow</span>
+        <span class="skill-tag">YOLO</span>
+        <span class="skill-tag">Scikit-learn</span>
+        <span class="skill-tag">Hugging Face</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">SYSTEMS & INFRA</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Linux</span>
+        <span class="skill-tag">Git</span>
+        <span class="skill-tag">Azure</span>
+        <span class="skill-tag">Google Colab</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="reveal">
+    <div class="section-tag">// CONTACT</div>
+    <h2 class="section-title">Let's Talk</h2>
+    <p class="section-sub">
+      I'm always up for conversations about GPU systems, research, or anything at the intersection of hardware and AI.
+      If you're working on something interesting in this space, reach out.
+    </p>
+    <div class="contact-links">
+      <a href="mailto:imanbekoveldar2@gmail.com" class="btn btn-primary">Send Email</a>
+      <a href="https://www.linkedin.com/in/eldar-imanbekov-aa5ba8265" class="btn btn-ghost" target="_blank">LinkedIn</a>
+      <a href="https://github.com/EldarImanbekov" class="btn btn-ghost" target="_blank">GitHub</a>
+    </div>
+  </div>
+</section>
+
+<footer>Eldar Imanbekov · Chicago, IL · Built from scratch</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) setTimeout(() => entry.target.classList.add('visible'), i * 100);
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
